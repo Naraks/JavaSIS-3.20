@@ -16,13 +16,13 @@ public class Unit1 {
      */
     private static String revertString() {
         char[] stringAsCharArray = INPUT_STRING.toCharArray();
-        StringBuilder reverseString = new StringBuilder();
+        StringBuilder reverseTextStringBuilder = new StringBuilder();
 
         for (int i = stringAsCharArray.length - 1; i >= 0; i--){
-            reverseString.append(stringAsCharArray[i]);
+            reverseTextStringBuilder.append(stringAsCharArray[i]);
         }
 
-        return reverseString.toString();
+        return reverseTextStringBuilder.toString();
     }
 
     private static void checkResult(String result) {
