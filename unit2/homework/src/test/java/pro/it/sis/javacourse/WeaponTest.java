@@ -2,39 +2,106 @@ package pro.it.sis.javacourse;
 
 import org.junit.Test;
 
-import java.nio.file.Watchable;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class WeaponTest {
 
     @Test
-    public void testPhysicalDamage() {
+    public void testDamageUsualSwordVsIceGiant() {
 
-        Target t = new Target();
-        Weapon w = new Weapon();
+        Creature t = new IceGiant();
+        Sword w = new UsualSword();
         w.hit(t);
 
-        assertEquals(100, t.getPhysicalDamage());
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
     }
 
     @Test
-    public void testFireDamage() {
+    public void testDamageUsualSwordVsIfrit() {
 
-        Target t = new Target();
-        Weapon w = new Weapon();
+        Creature t = new Ifrit();
+        Sword w = new UsualSword();
         w.hit(t);
 
-        assertEquals(100, t.getFireDamage());
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
     }
 
     @Test
-    public void testIceDamage() {
+    public void testDamageUsualSwordVsVasek() {
 
-        Target t = new Target();
-        Weapon w = new Weapon();
+        Creature t = new Vasek();
+        Sword w = new UsualSword();
         w.hit(t);
 
-        assertEquals(100, t.getIceDamage());
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
+    }
+
+    @Test
+    public void testDamageUakutskSwordVsIceGiant() {
+
+        Creature t = new IceGiant();
+        Sword w = new SwordOfTheNightInUakutsk();
+        w.hit(t);
+
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
+    }
+
+    @Test
+    public void testDamageUakutskSwordVsIfrit() {
+
+        Creature t = new Ifrit();
+        Sword w = new SwordOfTheNightInUakutsk();
+        w.hit(t);
+
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
+    }
+
+    @Test
+    public void testDamageUakutskSwordVsVasek() {
+
+        Creature t = new Vasek();
+        Sword w = new SwordOfTheNightInUakutsk();
+        w.hit(t);
+
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
+    }
+
+    @Test
+    public void testDamageBlazingSwordVsIceGiant() {
+
+        Creature t = new IceGiant();
+        Sword w = new BlazingAsphalt();
+        w.hit(t);
+
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
+    }
+
+    @Test
+    public void testDamageBlazingSwordVsIfrit() {
+
+        Creature t = new Ifrit();
+        Sword w = new BlazingAsphalt();
+        w.hit(t);
+
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
+    }
+
+    @Test
+    public void testDamageBlazingSwordVsVasek() {
+
+        Creature t = new Vasek();
+        Sword w = new BlazingAsphalt();
+        w.hit(t);
+
+        assertEquals(t.getMaxHitPoints() - w.allDamage.stream().filter(i ->
+                !t.getImmunity().contains(i.getDamageType())).mapToInt(Damage::getAmount).sum(), t.getCurrentHitPoints());
     }
 }

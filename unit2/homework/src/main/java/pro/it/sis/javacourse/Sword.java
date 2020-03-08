@@ -1,18 +1,23 @@
 package pro.it.sis.javacourse;
 
-public class Sword extends Weapon implements PhysicalBehavior {
+import lombok.Getter;
 
-    public Sword(int physicalDamage) {
-        super(physicalDamage);
+import java.util.Set;
+
+@Getter
+public abstract class Sword implements WeaponBehavior {
+
+    protected String name;
+    protected Set<Damage> allDamage;
+
+    public Sword(String name, Set<Damage> allDamage) {
+        this.name = name;
+        this.allDamage = allDamage;
     }
 
     @Override
-    void hit(Target target) {
-
-    }
-
-    @Override
-    public int getPhysicalDamage() {
-        return ;
+    public void hit(Creature creature) {
+        System.out.printf("You poked the %s with your %s\n", creature.getName(), name);
+        creature.takeDamage(allDamage);
     }
 }
