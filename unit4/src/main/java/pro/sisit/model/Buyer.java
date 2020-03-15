@@ -8,27 +8,32 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
-public class Author implements CSVBehavior {
+public class Buyer implements CSVBehavior {
 
     private String name;
-    private String birthPlace;
+    private String cardNumber;
+    private List<Book> purchasedBooks;
 
-    public Author(){}
+    public Buyer(){}
 
-    public Author(String name, String birthPlace) {
+    public Buyer(String name, String cardNumber){
         this.name = name;
-        this.birthPlace = birthPlace;
+        this.cardNumber = cardNumber;
+    }
+
+    public void addPurchasedBook(Book book){
+        purchasedBooks.add(book);
     }
 
     @Override
     public List<String> getFieldsForCSV() {
-        return Arrays.asList(name, birthPlace);
+        return Arrays.asList(name, cardNumber);
     }
 
     @Override
     public void fillObjectFromCSVFields(List<String> fields) {
         this.name = fields.get(0);
-        this.birthPlace = fields.get(1);
+        this.cardNumber = fields.get(1);
     }
 
     @Override
@@ -39,13 +44,13 @@ public class Author implements CSVBehavior {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Author author = (Author) o;
-        return getName().equals(author.getName()) &&
-            getBirthPlace().equals(author.getBirthPlace());
+        Buyer buyer = (Buyer) o;
+        return getName().equals(buyer.getName()) &&
+                getCardNumber().equals(buyer.getCardNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getBirthPlace());
+        return Objects.hash(getName(), getCardNumber());
     }
 }

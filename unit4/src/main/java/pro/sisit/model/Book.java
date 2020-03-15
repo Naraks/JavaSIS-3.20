@@ -1,13 +1,21 @@
 package pro.sisit.model;
 
+import lombok.Getter;
+import pro.sisit.CSVBehavior;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public class Book {
+@Getter
+public class Book implements CSVBehavior {
 
     private String name;
     private String author;
     private String genre;
     private String isbn;
+
+    public Book(){}
 
     public Book(String name, String author, String genre, String isbn) {
         this.name = name;
@@ -16,20 +24,17 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public List<String> getFieldsForCSV() {
+        return Arrays.asList(name, author, genre, isbn);
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public String getIsbn() {
-        return isbn;
+    @Override
+    public void fillObjectFromCSVFields(List<String> fields) {
+        this.name = fields.get(0);
+        this.author = fields.get(1);
+        this.genre = fields.get(2);
+        this.isbn = fields.get(3);
     }
 
     @Override
