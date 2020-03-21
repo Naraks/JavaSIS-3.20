@@ -1,35 +1,39 @@
 package pro.sisit.model;
 
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import pro.sisit.CSVBehavior;
 
-public class Book {
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Book implements CSVBehavior {
 
     private String name;
     private String author;
     private String genre;
     private String isbn;
 
-    public Book(String name, String author, String genre, String isbn) {
-        this.name = name;
-        this.author = author;
-        this.genre = genre;
-        this.isbn = isbn;
+    @Override
+    public List<String> getFieldsForCSV() {
+        return Arrays.asList(name, author, genre, isbn);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public String getIsbn() {
-        return isbn;
+    @Override
+    public void fillObjectFromCSVFields(List<String> fields) {
+        if (fields == null) {
+            throw new RuntimeException(String.format("Не удалось создать объект %s из csv файла", this.getClass().getSimpleName()));
+        }
+        this.name = Optional.ofNullable(fields.get(0)).orElseThrow(() -> new RuntimeException("Поле \"Name\" не должно быть пустым"));
+        this.author = Optional.ofNullable(fields.get(1)).orElseThrow(() -> new RuntimeException("Поле \"Author\" не должно быть пустым"));
+        this.genre = Optional.ofNullable(fields.get(2)).orElseThrow(() -> new RuntimeException("Поле \"Genre\" не должно быть пустым"));
+        this.isbn = Optional.ofNullable(fields.get(3)).orElseThrow(() -> new RuntimeException("Поле \"ISBN\" не должно быть пустым"));
     }
 
     @Override

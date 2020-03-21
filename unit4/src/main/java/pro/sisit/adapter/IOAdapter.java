@@ -1,6 +1,8 @@
 package pro.sisit.adapter;
 
-public interface IOAdapter<T> {
+import pro.sisit.CSVBehavior;
+
+public interface IOAdapter<T extends CSVBehavior> {
 
     T read(int index);
 
