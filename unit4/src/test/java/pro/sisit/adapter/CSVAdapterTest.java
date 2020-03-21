@@ -96,174 +96,157 @@ public class CSVAdapterTest {
     }
 
     @Test
-    public void testReadBook() throws IOException {
+    public void testReadBook() {
 
         Path bookFilePath = Paths.get("test-book-file.csv");
 
-        BufferedReader bookReader = new BufferedReader(
-                new FileReader(bookFilePath.toFile()));
+        try (BufferedReader bookReader = new BufferedReader(new FileReader(bookFilePath.toFile()));
+             BufferedWriter bookWriter = new BufferedWriter(new FileWriter(bookFilePath.toFile(), true))) {
 
-        BufferedWriter bookWriter = new BufferedWriter(
-                new FileWriter(bookFilePath.toFile(), true));
+            IOAdapter<Book> bookCsvAdapter =
+                    new LogIOAdapter<>(
+                            new CSVAdapter<>(Book.class, bookReader, bookWriter));
 
-        IOAdapter<Book> bookCsvAdapter =
-                new LogIOAdapter<>(
-                        new CSVAdapter<>(Book.class, bookReader, bookWriter));
+            Book book1 = bookCsvAdapter.read(1);
+            assertEquals("Филип Дик", book1.getAuthor());
+            assertEquals("Снятся ли андроидам электроовцы", book1.getName());
+            assertEquals("5-85256-001-4", book1.getIsbn());
+            assertEquals("научная фантастика", book1.getGenre());
 
-        Book book1 = bookCsvAdapter.read(1);
-        assertEquals("Филип Дик", book1.getAuthor());
-        assertEquals("Снятся ли андроидам электроовцы", book1.getName());
-        assertEquals("5-85256-001-4", book1.getIsbn());
-        assertEquals("научная фантастика", book1.getGenre());
-
-        Book expectedBook0 = new Book(
-                "Цветы для Элджернона",
-                "Daniel Keyes",
-                "научная фантастика",
-                "5-699-04661-5");
-        Book actualBook0 = bookCsvAdapter.read(2);
-        assertEquals(expectedBook0, actualBook0);
-
-        bookReader.close();
-        bookWriter.close();
+            Book expectedBook0 = new Book(
+                    "Цветы для Элджернона",
+                    "Daniel Keyes",
+                    "научная фантастика",
+                    "5-699-04661-5");
+            Book actualBook0 = bookCsvAdapter.read(2);
+            assertEquals(expectedBook0, actualBook0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testReadAuthor() throws IOException {
+    public void testReadAuthor() {
         Path authorFilePath = Paths.get("test-author-file.csv");
 
-        BufferedReader authorReader = new BufferedReader(
-                new FileReader(authorFilePath.toFile()));
+        try (BufferedReader authorReader = new BufferedReader(new FileReader(authorFilePath.toFile()));
+             BufferedWriter authorWriter = new BufferedWriter(new FileWriter(authorFilePath.toFile(), true))){
 
-        BufferedWriter authorWriter = new BufferedWriter(
-                new FileWriter(authorFilePath.toFile(), true));
+            IOAdapter<Author> authorCsvAdapter =
+                    new LogIOAdapter<>(
+                            new CSVAdapter<>(Author.class, authorReader, authorWriter));
 
-        IOAdapter<Author> authorCsvAdapter =
-                new LogIOAdapter<>(
-                        new CSVAdapter<>(Author.class, authorReader, authorWriter));
+            Author author1 = authorCsvAdapter.read(1);
+            assertEquals("Пушкин А.С.", author1.getName());
+            assertEquals("Российская империя, Москва", author1.getBirthPlace());
 
-        Author author1 = authorCsvAdapter.read(1);
-        assertEquals("Пушкин А.С.", author1.getName());
-        assertEquals("Российская империя, Москва", author1.getBirthPlace());
-
-        Author expectedAuthor0 = new Author(
-                "Лермонтов М.Ю.",
-                "Российская империя, Москва");
-        Author actualAuthor0 = authorCsvAdapter.read(2);
-        assertEquals(expectedAuthor0, actualAuthor0);
-
-        authorReader.close();
-        authorWriter.close();
+            Author expectedAuthor0 = new Author(
+                    "Лермонтов М.Ю.",
+                    "Российская империя, Москва");
+            Author actualAuthor0 = authorCsvAdapter.read(2);
+            assertEquals(expectedAuthor0, actualAuthor0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testReadBookShop() throws IOException {
+    public void testReadBookShop() {
         Path bookshopFilePath = Paths.get("test-bookshop-file.csv");
 
-        BufferedReader bookshopReader = new BufferedReader(
-                new FileReader(bookshopFilePath.toFile()));
+        try (BufferedReader bookshopReader = new BufferedReader(new FileReader(bookshopFilePath.toFile()));
+             BufferedWriter bookshopWriter = new BufferedWriter(new FileWriter(bookshopFilePath.toFile(), true))){
 
-        BufferedWriter bookshopWriter = new BufferedWriter(
-                new FileWriter(bookshopFilePath.toFile(), true));
+            IOAdapter<BookShop> bookshopCsvAdapter =
+                    new LogIOAdapter<>(
+                            new CSVAdapter<>(BookShop.class, bookshopReader, bookshopWriter));
 
-        IOAdapter<BookShop> bookshopCsvAdapter =
-                new LogIOAdapter<>(
-                        new CSVAdapter<>(BookShop.class, bookshopReader, bookshopWriter));
+            BookShop bookShop1 = bookshopCsvAdapter.read(1);
+            assertEquals("ул. Котяткина, 42", bookShop1.getAddress());
+            assertEquals("Бумажная радость", bookShop1.getName());
+            assertEquals("09:00 - 18:00", bookShop1.getWorkingHours());
 
-        BookShop bookShop1 = bookshopCsvAdapter.read(1);
-        assertEquals("ул. Котяткина, 42", bookShop1.getAddress());
-        assertEquals("Бумажная радость", bookShop1.getName());
-        assertEquals("09:00 - 18:00", bookShop1.getWorkingHours());
+            BookShop expectedBookShop0 = new BookShop(
+                    "ул. Мопсяткина, 12",
+                    "Чтун",
+                    "09:30 - 18:30");
+            BookShop actualBookShop0 = bookshopCsvAdapter.read(2);
+            assertEquals(expectedBookShop0, actualBookShop0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        BookShop expectedBookShop0 = new BookShop(
-                "ул. Мопсяткина, 12",
-                "Чтун",
-                "09:30 - 18:30");
-        BookShop actualBookShop0 = bookshopCsvAdapter.read(2);
-        assertEquals(expectedBookShop0, actualBookShop0);
-
-        bookshopReader.close();
-        bookshopWriter.close();
     }
 
     @Test
-    public void testAppendBook() throws IOException {
+    public void testAppendBook() {
         Path bookFilePath = Paths.get("test-book-file.csv");
 
-        BufferedReader bookReader = new BufferedReader(
-                new FileReader(bookFilePath.toFile()));
+        try (BufferedReader bookReader = new BufferedReader(new FileReader(bookFilePath.toFile()));
+             BufferedWriter bookWriter = new BufferedWriter(new FileWriter(bookFilePath.toFile(), true))){
 
-        BufferedWriter bookWriter = new BufferedWriter(
-                new FileWriter(bookFilePath.toFile(), true));
+            IOAdapter<Book> bookCsvAdapter =
+                    new LogIOAdapter<>(
+                            new CSVAdapter<>(Book.class, bookReader, bookWriter));
 
-        IOAdapter<Book> bookCsvAdapter =
-                new LogIOAdapter<>(
-                        new CSVAdapter<>(Book.class, bookReader, bookWriter));
+            Book newBook = new Book(
+                    "Чертоги разума. Убей в себе идиота!",
+                    "Андрей Курпатов",
+                    "Психология",
+                    "978-5-906902-91-7");
 
-        Book newBook = new Book(
-                "Чертоги разума. Убей в себе идиота!",
-                "Андрей Курпатов",
-                "Психология",
-                "978-5-906902-91-7");
-
-        int bookIndex = bookCsvAdapter.append(newBook);
-        Book bookAtIndex = bookCsvAdapter.read(bookIndex);
-        assertEquals(newBook, bookAtIndex);
-
-        bookReader.close();
-        bookWriter.close();
+            int bookIndex = bookCsvAdapter.append(newBook);
+            Book bookAtIndex = bookCsvAdapter.read(bookIndex);
+            assertEquals(newBook, bookAtIndex);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testAppendBookShop() throws IOException {
+    public void testAppendBookShop() {
         Path bookShopFilePath = Paths.get("test-bookshop-file.csv");
 
-        BufferedReader bookShopReader = new BufferedReader(
-                new FileReader(bookShopFilePath.toFile()));
+        try (BufferedReader bookShopReader = new BufferedReader(new FileReader(bookShopFilePath.toFile()));
+             BufferedWriter bookShopWriter = new BufferedWriter(new FileWriter(bookShopFilePath.toFile(), true))){
 
-        BufferedWriter bookShopWriter = new BufferedWriter(
-                new FileWriter(bookShopFilePath.toFile(), true));
+            IOAdapter<BookShop> bookShopCsvAdapter =
+                    new LogIOAdapter<>(
+                            new CSVAdapter<>(BookShop.class, bookShopReader, bookShopWriter));
 
-        IOAdapter<BookShop> bookShopCsvAdapter =
-                new LogIOAdapter<>(
-                        new CSVAdapter<>(BookShop.class, bookShopReader, bookShopWriter));
+            BookShop newBookShop = new BookShop(
+                    "ул. Кочерыжкинв",
+                    "Мир сказок",
+                    "10:00 - 18:00");
 
-        BookShop newBookShop = new BookShop(
-                "ул. Кочерыжкинв",
-                "Мир сказок",
-                "10:00 - 18:00");
-
-        int bookShopIndex = bookShopCsvAdapter.append(newBookShop);
-        BookShop bookShopAtIndex = bookShopCsvAdapter.read(bookShopIndex);
-        assertEquals(newBookShop, bookShopAtIndex);
-
-        bookShopReader.close();
-        bookShopWriter.close();
+            int bookShopIndex = bookShopCsvAdapter.append(newBookShop);
+            BookShop bookShopAtIndex = bookShopCsvAdapter.read(bookShopIndex);
+            assertEquals(newBookShop, bookShopAtIndex);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void testAppendAuthor() throws IOException {
+    public void testAppendAuthor() {
         Path authorFilePath = Paths.get("test-author-file.csv");
 
-        BufferedReader authorReader = new BufferedReader(
-                new FileReader(authorFilePath.toFile()));
+        try (BufferedReader authorReader = new BufferedReader(new FileReader(authorFilePath.toFile()));
+             BufferedWriter authorWriter = new BufferedWriter(new FileWriter(authorFilePath.toFile(), true))){
 
-        BufferedWriter authorWriter = new BufferedWriter(
-                new FileWriter(authorFilePath.toFile(), true));
+            IOAdapter<Author> authorCsvAdapter =
+                    new LogIOAdapter<>(
+                            new CSVAdapter<>(Author.class, authorReader, authorWriter));
 
-        IOAdapter<Author> authorCsvAdapter =
-                new LogIOAdapter<>(
-                        new CSVAdapter<>(Author.class, authorReader, authorWriter));
+            Author newAuthor = new Author(
+                    "Гиппиус З.Н.",
+                    "Белёв");
 
-        Author newAuthor = new Author(
-                "Гиппиус З.Н.",
-                "Белёв");
-
-        int authorIndex = authorCsvAdapter.append(newAuthor);
-        Author authorAtIndex = authorCsvAdapter.read(authorIndex);
-        assertEquals(newAuthor, authorAtIndex);
-
-        authorReader.close();
-        authorWriter.close();
+            int authorIndex = authorCsvAdapter.append(newAuthor);
+            Author authorAtIndex = authorCsvAdapter.read(authorIndex);
+            assertEquals(newAuthor, authorAtIndex);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

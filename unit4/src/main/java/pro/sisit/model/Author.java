@@ -1,24 +1,22 @@
 package pro.sisit.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import pro.sisit.CSVBehavior;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Author implements CSVBehavior {
 
     private String name;
     private String birthPlace;
-
-    public Author(){}
-
-    public Author(String name, String birthPlace) {
-        this.name = name;
-        this.birthPlace = birthPlace;
-    }
 
     @Override
     public List<String> getFieldsForCSV() {
@@ -27,8 +25,11 @@ public class Author implements CSVBehavior {
 
     @Override
     public void fillObjectFromCSVFields(List<String> fields) {
-        this.name = fields.get(0);
-        this.birthPlace = fields.get(1);
+        if (fields == null) {
+            throw new RuntimeException(String.format("Не удалось создать объект %s из csv файла", this.getClass().getSimpleName()));
+        }
+        this.name = Optional.ofNullable(fields.get(0)).orElseThrow(() -> new RuntimeException("Поле \"Name\" не должно быть пустым"));
+        this.birthPlace = Optional.ofNullable(fields.get(1)).orElseThrow(() -> new RuntimeException("Поле \"BirthPlace\" не должно быть пустым"));
     }
 
     @Override

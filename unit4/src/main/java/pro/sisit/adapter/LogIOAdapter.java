@@ -1,14 +1,12 @@
 package pro.sisit.adapter;
 
+import lombok.AllArgsConstructor;
 import pro.sisit.CSVBehavior;
 
+@AllArgsConstructor
 public class LogIOAdapter<T extends CSVBehavior> implements IOAdapter<T> {
 
-    private IOAdapter<T> adapter;
-
-    public LogIOAdapter(IOAdapter<T> adapter) {
-        this.adapter = adapter;
-    }
+    private final IOAdapter<T> adapter;
 
     @Override
     public T read(int index) {

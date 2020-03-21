@@ -3,25 +3,19 @@ package pro.sisit.adapter.impl;
 import java.io.*;
 import java.util.Arrays;
 
+import lombok.RequiredArgsConstructor;
 import pro.sisit.CSVBehavior;
 import pro.sisit.adapter.IOAdapter;
 
+@RequiredArgsConstructor
 public class CSVAdapter<T extends CSVBehavior> implements IOAdapter<T> {
 
-    private Class<T> entityType;
-    private BufferedReader reader;
-    private BufferedWriter writer;
+    private final Class<T> entityType;
+    private final BufferedReader reader;
+    private final BufferedWriter writer;
 
     private final int charLimit = 100_000;
     private final String delimiter = ";";
-
-    public CSVAdapter(Class<T> entityType, BufferedReader reader,
-                      BufferedWriter writer) {
-
-        this.entityType = entityType;
-        this.reader = reader;
-        this.writer = writer;
-    }
 
     @Override
     public T read(int index) {
@@ -33,8 +27,10 @@ public class CSVAdapter<T extends CSVBehavior> implements IOAdapter<T> {
             object = entityType.newInstance();
             object.fillObjectFromCSVFields(Arrays.asList(reader.readLine().split(delimiter)));
             reader.reset();
-        } catch (IOException | IllegalAccessException | InstantiationException e) {
+        } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Не удалось прочитать строку по номеру %d", index));
         }
         return object;
     }
@@ -55,7 +51,7 @@ public class CSVAdapter<T extends CSVBehavior> implements IOAdapter<T> {
             }
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format("Не удалось записать объект %s", entity.toString()));
         }
         return ++index;
     }
