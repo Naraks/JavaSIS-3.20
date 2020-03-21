@@ -1,10 +1,16 @@
 package pro.sisit.javacourse;
 
+import pro.sisit.javacourse.inverse.BigDecimalRange;
 import pro.sisit.javacourse.inverse.InverseDeliveryTask;
 import pro.sisit.javacourse.inverse.Solution;
+import pro.sisit.javacourse.optimal.DeliveryTask;
+import pro.sisit.javacourse.optimal.Route;
+import pro.sisit.javacourse.optimal.RouteType;
+import pro.sisit.javacourse.optimal.Transport;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InversePathFinder {
 
@@ -16,7 +22,7 @@ public class InversePathFinder {
      * удовлетворяющий параметру переданному параметру task:
      * 1. Транспорт должен быть доступен для решения данной задачи
      * 2. Стоимость решения задачи должна входить в диапазон цены пераметра task
-     * 3. Также возвращаемый список должен быть осортирован по двум значениям:
+     * 3. Также возвращаемый список должен быть отсортирован по двум значениям:
      * - сначала по итоговой стоимости решения задачи - по убыванию
      * - затем, если цены одинаковы - по наименованию задачи доставки по алфавиту - по возрастанию
      * Если task равна null, то функция должна вернуть пустой список доступных решений.
@@ -24,7 +30,79 @@ public class InversePathFinder {
      * то функция должна вернуть пустой список доступных решений.
      */
     public List<Solution> getAllSolutions(InverseDeliveryTask task) {
-        // ToDo: realize me!
-        return new ArrayList<>();
+
+        List<Solution> solutions = new ArrayList<>();
+
+        if (task == null) {
+            return solutions;
+        }
+        if (task.getTasks() == null || task.getTransports() == null || task.getPriceRange() == null) {
+            return solutions;
+        }
+
+        for (DeliveryTask deliveryTask : task.getTasks()) {
+            for (Transport transport : getAvailableTransports(deliveryTask, task.getTransports(), task.getPriceRange())) {
+                solutions.add(new Solution(deliveryTask, transport, getTransportPriceByDeliveryTask(deliveryTask, transport)));
+            }
+        }
+
+        return solutions.stream()
+                .sorted(Comparator.comparing(solution -> solution.getDeliveryTask().getName()))
+                .sorted(Comparator.comparing(Solution::getPrice).reversed())
+                .collect(Collectors.toList());
+    }
+
+    private List<Transport> getAvailableTransports(DeliveryTask deliveryTask, List<Transport> transports, BigDecimalRange range) {
+        return transports.stream()
+                .filter(transport -> isTransportSuitableByRouteType(deliveryTask, transport))
+                .filter(transport -> isTransportSuitableByVolume(transport.getVolume(), deliveryTask.getVolume()))
+                .filter(transport -> isPriceInPriceRange(getTransportPriceByDeliveryTask(deliveryTask, transport), range))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isTransportSuitableByVolume(BigDecimal transportVolume, BigDecimal deliveryTaskVolume) {
+        return transportVolume.compareTo(deliveryTaskVolume) >= 0;
+    }
+
+    private boolean isTransportSuitableByRouteType(DeliveryTask deliveryTask, Transport transport) {
+        return deliveryTask.getRoutes().stream().anyMatch(route -> route.getType().equals(transport.getType()));
+    }
+
+    private BigDecimal getTransportPriceByDeliveryTask(DeliveryTask deliveryTask, Transport transport) {
+        return deliveryTask.getRoutes().stream()
+                .filter(route -> route.getType().equals(transport.getType()))
+                .findAny()
+                .map(route -> route.getLength().multiply(transport.getPrice()))
+                .orElse(null);
+    }
+
+    private boolean isPriceInPriceRange(BigDecimal price, BigDecimalRange priceRange) {
+        return isPriceBiggerThatLeftPriceRange(price, priceRange)
+                && isPriceBiggerThatRightPriceRange(price, priceRange);
+    }
+
+    private boolean isPriceBiggerThatLeftPriceRange(BigDecimal price, BigDecimalRange priceRange) {
+        if (priceRange.isLeftOpen()) {
+            return true;
+        } else {
+            if (priceRange.isLeftStrict()) {
+                return price.compareTo(priceRange.getLeft()) > 0;
+            } else {
+                return price.compareTo(priceRange.getLeft()) >= 0;
+            }
+        }
+    }
+
+    private boolean isPriceBiggerThatRightPriceRange(BigDecimal price, BigDecimalRange priceRange) {
+        if (priceRange.isRightOpen()) {
+            return true;
+        } else {
+            if (priceRange.isRightStrict()) {
+                return price.compareTo(priceRange.getRight()) < 0;
+            } else {
+                return price.compareTo(priceRange.getRight()) <= 0;
+            }
+        }
     }
 }
+
