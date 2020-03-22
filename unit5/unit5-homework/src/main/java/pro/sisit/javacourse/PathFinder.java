@@ -6,10 +6,7 @@ import pro.sisit.javacourse.optimal.RouteType;
 import pro.sisit.javacourse.optimal.Transport;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,25 +20,22 @@ public class PathFinder {
      */
     public Transport getOptimalTransport(DeliveryTask deliveryTask, List<Transport> transports) {
 
-        Optional<DeliveryTask> optionalDeliveryTask = Optional.ofNullable(deliveryTask);
-        Optional<List<Transport>> optionalTransports = Optional.ofNullable(transports);
-        
-        if (optionalDeliveryTask.isPresent() && optionalTransports.isPresent()){
-            return transports.stream()
-                    .filter(transportSuitableByRouteTypePredicate(deliveryTask))
-                    .filter(transportSuitableByVolumePredicate(deliveryTask))
-                    .min(Comparator.comparing(transport -> getTransportPriceByDeliveryTask(deliveryTask, transport)))
-                    .orElse(null);
-        }
-        else return null;
+        List<Transport> optionalTransports = Optional.ofNullable(transports).orElse(Collections.emptyList());
+
+        return optionalTransports.stream()
+                .filter(transport -> isTransportSuitableByRouteTypePredicate(deliveryTask, transport))
+                .filter(transport -> isTransportSuitableByVolumePredicate(deliveryTask, transport))
+                .min(Comparator.comparing(transport -> getTransportPriceByDeliveryTask(deliveryTask, transport)))
+                .orElse(null);
+
     }
 
-    private Predicate<Transport> transportSuitableByRouteTypePredicate(DeliveryTask deliveryTask) {
-        return transport -> deliveryTask.getRoutes().stream().anyMatch(route -> route.getType().equals(transport.getType()));
+    private boolean isTransportSuitableByRouteTypePredicate(DeliveryTask deliveryTask, Transport transport) {
+        return deliveryTask != null && deliveryTask.getRoutes().stream().anyMatch(route -> route.getType().equals(transport.getType()));
     }
 
-    private Predicate<Transport> transportSuitableByVolumePredicate(DeliveryTask deliveryTask) {
-        return transport -> transport.getVolume().compareTo(deliveryTask.getVolume()) >= 0;
+    private boolean isTransportSuitableByVolumePredicate(DeliveryTask deliveryTask, Transport transport) {
+        return deliveryTask != null && transport.getVolume().compareTo(deliveryTask.getVolume()) >= 0;
     }
 
     private BigDecimal getTransportPriceByDeliveryTask(DeliveryTask deliveryTask, Transport transport) {
