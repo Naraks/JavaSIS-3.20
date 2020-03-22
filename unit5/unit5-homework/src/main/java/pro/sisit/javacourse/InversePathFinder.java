@@ -40,15 +40,15 @@ public class InversePathFinder {
             return solutions;
         }
 
-        for (DeliveryTask deliveryTask : task.getTasks()) {
-            for (Transport transport : getAvailableTransports(deliveryTask, task.getTransports(), task.getPriceRange())) {
-                solutions.add(new Solution(deliveryTask, transport, getTransportPriceByDeliveryTask(deliveryTask, transport)));
-            }
-        }
+        task.getTasks()
+                .forEach(deliveryTask -> getAvailableTransports(deliveryTask, task.getTransports(), task.getPriceRange())
+                        .forEach(
+                                transport -> solutions.add(new Solution(deliveryTask, transport,
+                                        getTransportPriceByDeliveryTask(deliveryTask, transport)))
+                        ));
 
         return solutions.stream()
-                .sorted(Comparator.comparing(solution -> solution.getDeliveryTask().getName()))
-                .sorted(Comparator.comparing(Solution::getPrice).reversed())
+                .sorted(Comparator.comparing(Solution::getPrice).reversed().thenComparing(solution -> solution.getDeliveryTask().getName()))
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +56,7 @@ public class InversePathFinder {
         return transports.stream()
                 .filter(transport -> isTransportSuitableByRouteType(deliveryTask, transport))
                 .filter(transport -> isTransportSuitableByVolume(transport.getVolume(), deliveryTask.getVolume()))
-                .filter(transport -> isPriceInPriceRange(getTransportPriceByDeliveryTask(deliveryTask, transport), range))
+                .filter(transport -> BigDecimalRange.isPriceInPriceRange(getTransportPriceByDeliveryTask(deliveryTask, transport), range))
                 .collect(Collectors.toList());
     }
 
@@ -74,35 +74,6 @@ public class InversePathFinder {
                 .findAny()
                 .map(route -> route.getLength().multiply(transport.getPrice()))
                 .orElse(null);
-    }
-
-    private boolean isPriceInPriceRange(BigDecimal price, BigDecimalRange priceRange) {
-        return isPriceBiggerThatLeftPriceRange(price, priceRange)
-                && isPriceBiggerThatRightPriceRange(price, priceRange);
-    }
-
-    private boolean isPriceBiggerThatLeftPriceRange(BigDecimal price, BigDecimalRange priceRange) {
-        if (priceRange.isLeftOpen()) {
-            return true;
-        } else {
-            if (priceRange.isLeftStrict()) {
-                return price.compareTo(priceRange.getLeft()) > 0;
-            } else {
-                return price.compareTo(priceRange.getLeft()) >= 0;
-            }
-        }
-    }
-
-    private boolean isPriceBiggerThatRightPriceRange(BigDecimal price, BigDecimalRange priceRange) {
-        if (priceRange.isRightOpen()) {
-            return true;
-        } else {
-            if (priceRange.isRightStrict()) {
-                return price.compareTo(priceRange.getRight()) < 0;
-            } else {
-                return price.compareTo(priceRange.getRight()) <= 0;
-            }
-        }
     }
 }
 
