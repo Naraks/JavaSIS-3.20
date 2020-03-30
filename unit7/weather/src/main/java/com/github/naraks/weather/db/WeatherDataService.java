@@ -10,7 +10,7 @@ public interface WeatherDataService {
 
     List<WeatherRow> getAll();
 
-    List<WeatherRow> getByPeriodAndCity(String city, LocalDate startDate, LocalDate finishDate);
+    List<WeatherRow> getByPeriod(String city, LocalDate startDate, LocalDate finishDate);
 
     List<WeatherRow> getByPeriod(LocalDate startDate, LocalDate finishDate);
 }

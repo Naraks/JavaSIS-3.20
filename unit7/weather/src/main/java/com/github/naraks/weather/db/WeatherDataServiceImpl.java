@@ -1,6 +1,7 @@
 package com.github.naraks.weather.db;
 
 import com.github.naraks.weather.WeatherRow;
+import com.github.naraks.weather.shell.CommandsServiceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,8 @@ public class WeatherDataServiceImpl implements WeatherDataService {
     }
 
     @Override
-    public List<WeatherRow> getByPeriodAndCity(String city, LocalDate startDate, LocalDate finishDate) {
-        if (city.equals("all")) {
+    public List<WeatherRow> getByPeriod(String city, LocalDate startDate, LocalDate finishDate) {
+        if (city.equals(CommandsServiceImpl.ALL)) {
             return getByPeriod(startDate, finishDate);
         } else {
             return jdbcTemplate.query(

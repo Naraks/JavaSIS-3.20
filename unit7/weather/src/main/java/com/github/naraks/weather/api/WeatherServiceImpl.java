@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
+    public static final String URL = "https://community-open-weather-map.p.rapidapi.com/weather?units=metric&mode=json&q=%s";
+
     private final RestTemplate restTemplate;
     private final WeatherDataService weatherDataService;
 
@@ -27,22 +29,21 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public String getCurrentWeatherByCity(String city) {
-        String url = String.format("https://community-open-weather-map.p.rapidapi.com/weather?units=metric&mode=json&q=%s",
-                city);
+        String url = String.format(URL, city);
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-rapidapi-host", "community-open-weather-map.p.rapidapi.com");
         headers.set("x-rapidapi-key", key);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<WeatherDTO> response = restTemplate.exchange(url, HttpMethod.GET, entity, WeatherDTO.class);
-        if (response.getBody().getCod() == null) {
-            throw new RuntimeException("Sorry, server unavailable. Please try later");
-        }
-        if (response.getBody().getCod().equals("404")) {
-            return "\n" + response.getBody().getMessage() + ". Check your map, please.";
-        } else {
-            String temp = response.getBody().getMain().getTemp();
-            weatherDataService.save(city, temp, LocalDate.now());
-            return temp;
+        checkResponse(response);
+        String temp = response.getBody().getMain().getTemp();
+        weatherDataService.save(city, temp, LocalDate.now());
+        return temp;
+    }
+
+    private void checkResponse(ResponseEntity<WeatherDTO> response){
+        if (response.getBody() == null || response.getBody().getMain() == null || response.getBody().getMain() == null) {
+            throw new RuntimeException("Sorry, problems on the server. Try later");
         }
     }
 }
