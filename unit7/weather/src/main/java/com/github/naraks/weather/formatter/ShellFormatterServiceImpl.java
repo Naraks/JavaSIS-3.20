@@ -19,7 +19,6 @@ public class ShellFormatterServiceImpl implements FormatterService{
 
     public String getRecordsByPeriodAndCity(List<WeatherRow> list) {
         Map<String, Map<Month, Double>> map = list.stream()
-
                 .collect(Collectors.groupingBy(WeatherRow::getCity,
                         Collectors.groupingBy(row -> row.getDate().getMonth(),
                                 Collectors.averagingDouble(t -> Double.parseDouble(t.getTemp())))));
