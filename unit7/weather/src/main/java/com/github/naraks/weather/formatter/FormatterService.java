@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FormatterService {
     String getAllRecords(List<WeatherRow> list);
-    String getRecordsByPeriodAndCity(List<WeatherRow> list);
+    String getAverageTemperatureByMonthAndCity(List<WeatherRow> list);
 }

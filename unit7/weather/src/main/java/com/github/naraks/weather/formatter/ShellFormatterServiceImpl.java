@@ -17,7 +17,7 @@ public class ShellFormatterServiceImpl implements FormatterService{
                 .collect(Collectors.joining("\n"));
     }
 
-    public String getRecordsByPeriodAndCity(List<WeatherRow> list) {
+    public String getAverageTemperatureByMonthAndCity(List<WeatherRow> list) {
         Map<String, Map<Month, Double>> map = list.stream()
                 .collect(Collectors.groupingBy(WeatherRow::getCity,
                         Collectors.groupingBy(row -> row.getDate().getMonth(),
