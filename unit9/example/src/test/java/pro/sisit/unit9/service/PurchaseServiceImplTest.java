@@ -61,7 +61,7 @@ public class PurchaseServiceImplTest {
 
     @Test
     public void makePurchaseTest() {
-        Buyer buyer = buyerRepository.findAll().stream().findFirst().orElse(null);
+        Buyer buyer = buyerRepository.findByName("Мария Кюри").stream().findFirst().orElse(null);
         BigDecimal cost = new BigDecimal(1);
         Book book1 = bookRepository.findAll().stream().findFirst().orElse(null);
         Book book2 = bookRepository.findAll().stream().findFirst().orElse(null);
@@ -87,7 +87,7 @@ public class PurchaseServiceImplTest {
 
     @Test
     public void makePurchaseCostNullTest(){
-        Buyer buyer = buyerRepository.findAll().stream().findFirst().orElse(null);
+        Buyer buyer = buyerRepository.findByName("Мария Кюри").stream().findFirst().orElse(null);
         BigDecimal cost = null;
         Book book = bookRepository.findAll().stream().findFirst().orElse(null);
 
@@ -99,7 +99,7 @@ public class PurchaseServiceImplTest {
 
     @Test
     public void makePurchaseBookNullTest(){
-        Buyer buyer = buyerRepository.findAll().stream().findFirst().orElse(null);
+        Buyer buyer = buyerRepository.findByName("Мария Кюри").stream().findFirst().orElse(null);
         BigDecimal cost = new BigDecimal(1);
         Book book = null;
 
