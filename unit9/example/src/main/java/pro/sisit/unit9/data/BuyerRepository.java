@@ -7,7 +7,8 @@ import pro.sisit.unit9.entity.Buyer;
 
 import java.util.List;
 
-public interface BuyerRepository extends CrudRepository<Buyer, Long>,
-                                    JpaRepository<Buyer, Long>, JpaSpecificationExecutor<Buyer>{
+public interface BuyerRepository extends
+        CrudRepository<Buyer, Long>,
+        JpaRepository<Buyer, Long>, JpaSpecificationExecutor<Buyer>{
     List<Buyer> findByName(String name);
 }

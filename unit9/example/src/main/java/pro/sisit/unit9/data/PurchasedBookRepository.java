@@ -9,8 +9,9 @@ import pro.sisit.unit9.entity.PurchasedBook;
 
 import java.util.List;
 
-public interface PurchasedBookRepository extends CrudRepository<PurchasedBook, Long>,
-                                        JpaRepository<PurchasedBook, Long>, JpaSpecificationExecutor<PurchasedBook> {
+public interface PurchasedBookRepository extends
+        CrudRepository<PurchasedBook, Long>,
+        JpaRepository<PurchasedBook, Long>, JpaSpecificationExecutor<PurchasedBook> {
     List<PurchasedBook> findByBook(Book book);
     List<PurchasedBook> findByBuyer(Buyer buyer);
 }
