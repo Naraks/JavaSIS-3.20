@@ -22,7 +22,7 @@ public class ReportServiceImpl implements ReportService{
         return purchasedBookRepository.findByBook(book).stream()
                 .map(PurchasedBook::getCost)
                 .reduce(BigDecimal::add)
-                .orElse(new BigDecimal(0));
+                .orElse(BigDecimal.ZERO);
     }
 
     @Override
@@ -30,6 +30,6 @@ public class ReportServiceImpl implements ReportService{
         return purchasedBookRepository.findByBuyer(buyer).stream()
                 .map(PurchasedBook::getCost)
                 .reduce(BigDecimal::add)
-                .orElse(new BigDecimal(0));
+                .orElse(BigDecimal.ZERO);
     }
 }

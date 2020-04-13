@@ -52,13 +52,6 @@ public class PurchaseServiceImplTest {
         buyerRepository.save(buyer1);
     }
 
-    @After
-    public void clean(){
-        purchasedBookRepository.deleteAll();
-        bookRepository.deleteAll();
-        buyerRepository.deleteAll();
-    }
-
     @Test
     public void makePurchaseTest() {
         Buyer buyer = buyerRepository.findByName("Мария Кюри").stream().findFirst().orElse(null);
@@ -79,8 +72,8 @@ public class PurchaseServiceImplTest {
         BigDecimal cost = new BigDecimal(1);
         Book book = bookRepository.findAll().stream().findFirst().orElse(null);
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Null buyer in 'makePurchase' method");
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("Buyer required");
 
         purchaseService.makePurchase(buyer, cost, book);
     }
@@ -91,8 +84,8 @@ public class PurchaseServiceImplTest {
         BigDecimal cost = null;
         Book book = bookRepository.findAll().stream().findFirst().orElse(null);
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Null cost in 'makePurchase' method");
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("Cost required");
 
         purchaseService.makePurchase(buyer, cost, book);
     }
@@ -103,8 +96,8 @@ public class PurchaseServiceImplTest {
         BigDecimal cost = new BigDecimal(1);
         Book book = null;
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Null book in 'makePurchase' method");
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("Book required");
 
         purchaseService.makePurchase(buyer, cost, book);
     }

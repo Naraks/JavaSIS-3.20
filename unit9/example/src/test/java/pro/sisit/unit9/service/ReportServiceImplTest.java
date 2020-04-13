@@ -114,13 +114,6 @@ public class ReportServiceImplTest {
         purchasedBookRepository.save(purchasedBook5);
     }
 
-    @After
-    public void clean() {
-        purchasedBookRepository.deleteAll();
-        bookRepository.deleteAll();
-        buyerRepository.deleteAll();
-    }
-
     @Test
     public void countTotalCostOfPurchasesByBookTest(){
         Assert.assertEquals(new BigDecimal(0),

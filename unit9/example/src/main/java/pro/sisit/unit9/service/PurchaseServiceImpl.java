@@ -7,6 +7,7 @@ import pro.sisit.unit9.entity.Buyer;
 import pro.sisit.unit9.entity.PurchasedBook;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService{
@@ -28,14 +29,8 @@ public class PurchaseServiceImpl implements PurchaseService{
     }
 
     private void checkPurchase(Buyer buyer, BigDecimal cost, Book book){
-        if (buyer == null) {
-            throw new RuntimeException("Null buyer in 'makePurchase' method");
-        }
-        if (cost == null) {
-            throw new RuntimeException("Null cost in 'makePurchase' method");
-        }
-        if (book == null) {
-            throw new RuntimeException("Null book in 'makePurchase' method");
-        }
+        Objects.requireNonNull(buyer, "Buyer required");
+        Objects.requireNonNull(cost, "Cost required");
+        Objects.requireNonNull(book, "Book required");
     }
 }
