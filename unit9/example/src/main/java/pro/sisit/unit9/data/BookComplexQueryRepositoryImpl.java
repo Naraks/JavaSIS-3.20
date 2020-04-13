@@ -6,7 +6,7 @@ import pro.sisit.unit9.entity.Book;
 import java.util.List;
 
 public class BookComplexQueryRepositoryImpl implements BookComplexQueryRepository {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     BookComplexQueryRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

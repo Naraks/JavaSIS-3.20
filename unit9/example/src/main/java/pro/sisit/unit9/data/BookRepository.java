@@ -9,14 +9,19 @@ import pro.sisit.unit9.entity.Book;
 
 import java.util.List;
 
-public interface BookRepository extends CrudRepository<Book, Long>, PagingAndSortingRepository<Book, Long>,
-        JpaRepository<Book, Long>, JpaSpecificationExecutor<Book>, BookComplexQueryRepository {
+public interface BookRepository extends
+        CrudRepository<Book, Long>,
+        PagingAndSortingRepository<Book, Long>,
+        JpaRepository<Book, Long>, JpaSpecificationExecutor<Book>,
+        BookComplexQueryRepository {
     List<Book> findByYear(Integer year);
+
+    List<Book> findByTitle(String title);
 
     @Query("select aob.book from "
             + "AuthorOfBook aob "
             + "join aob.author "
-            + "where aob.author.lastname = ?1")
-    List<Book> findByAuthor(String lastname);
+            + "where aob.author.lastName = ?1")
+    List<Book> findByAuthor(String lastName);
 
 }

@@ -45,8 +45,8 @@ public class SpringDataApplicationTests {
 		bookRepository.save(book3);
 
 		Author author = new Author();
-		author.setFirstname("Марк");
-		author.setLastname("Твен");
+		author.setFirstName("Марк");
+		author.setLastName("Твен");
 		authorRepository.save(author);
 
 		AuthorOfBook authorOfBook = new AuthorOfBook();
@@ -60,8 +60,8 @@ public class SpringDataApplicationTests {
 		authorOfBookRepository.save(authorOfBook2);
 
 		Author author2 = new Author();
-		author2.setFirstname("Жюль");
-		author2.setLastname("Верн");
+		author2.setFirstName("Жюль");
+		author2.setLastName("Верн");
 		authorRepository.save(author2);
 
 		AuthorOfBook authorOfBook3 = new AuthorOfBook();
@@ -75,8 +75,8 @@ public class SpringDataApplicationTests {
 		bookRepository.save(book4);
 
 		Author author3 = new Author();
-		author3.setFirstname("Алексей");
-		author3.setLastname("Толстой");
+		author3.setFirstName("Алексей");
+		author3.setLastName("Толстой");
 		authorRepository.save(author3);
 
 		AuthorOfBook authorOfBook4 = new AuthorOfBook();
