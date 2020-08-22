@@ -206,4 +206,33 @@ public class BigDecimalRange {
     public static BigDecimalRange infinityRange() {
         return new BigDecimalRange(null, true, null, true);
     }
+
+    public static boolean isPriceInPriceRange(BigDecimal decimal, BigDecimalRange decimalRange) {
+        return isPriceBiggerThatLeftPriceRange(decimal, decimalRange)
+                && isPriceBiggerThatRightPriceRange(decimal, decimalRange);
+    }
+
+    public static boolean isPriceBiggerThatLeftPriceRange(BigDecimal decimal, BigDecimalRange decimalRange) {
+        if (decimalRange.isLeftOpen()) {
+            return true;
+        } else {
+            if (decimalRange.isLeftStrict()) {
+                return decimal.compareTo(decimalRange.getLeft()) > 0;
+            } else {
+                return decimal.compareTo(decimalRange.getLeft()) >= 0;
+            }
+        }
+    }
+
+    public static boolean isPriceBiggerThatRightPriceRange(BigDecimal decimal, BigDecimalRange decimalRange) {
+        if (decimalRange.isRightOpen()) {
+            return true;
+        } else {
+            if (decimalRange.isRightStrict()) {
+                return decimal.compareTo(decimalRange.getRight()) < 0;
+            } else {
+                return decimal.compareTo(decimalRange.getRight()) <= 0;
+            }
+        }
+    }
 }
